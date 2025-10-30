@@ -71,10 +71,10 @@ export const columns: ColumnDef<Project>[] = [
   {
     accessorKey: "summary",
     header: "Summary",
-    cell: ({ getValue }) => (
-      <p className="line-clamp-2 text-muted-foreground text-sm">
-        {getValue() as string}
-      </p>
+    cell: ({ row }) => (
+      <div className="max-w-xs whitespace-normal wrap-break-word text-sm text-muted-foreground">
+        {row.getValue("summary")}
+      </div>
     ),
   },
   {
