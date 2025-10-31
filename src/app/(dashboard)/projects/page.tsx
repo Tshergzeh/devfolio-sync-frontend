@@ -1,5 +1,5 @@
-import { DataTable } from "./components/data-table";
-import { Project, columns } from "./components/columns";
+import { DataTable } from "../../../components/data-table";
+import { Project, columns } from "../../../components/columns";
 
 async function getProjects(page = 1, limit = 10): Promise<Project[]> {
   const res = await fetch(

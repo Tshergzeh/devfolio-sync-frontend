@@ -8,7 +8,7 @@ import ReactMarkdown from "react-markdown";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
-import { Project } from "../components/columns";
+import { Project } from "../../../../components/columns";
 
 export default function ProjectDetailPage() {
   const { id } = useParams();
