@@ -8,9 +8,12 @@ import ReactMarkdown from "react-markdown";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
-import { Project } from "../../../../components/columns";
+import { Project   } from "@/components/columns";
+import { useRequireAuth } from "@/hooks/use-require-auth";
 
 export default function ProjectDetailPage() {
+  useRequireAuth();
+  
   const { id } = useParams();
   const [loading, setLoading] = React.useState(true);
   const [saving, setSaving] = React.useState(false);
