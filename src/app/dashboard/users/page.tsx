@@ -20,6 +20,8 @@ type User = {
 
 export default function UsersPage() {
   useRequireAuth();
+
+  const token = localStorage.getItem("token");
   
   const columns: ColumnDef<User>[] = [
     {
@@ -49,7 +51,7 @@ export default function UsersPage() {
     const res = await fetch(
       `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/users?page=${page}`,
       {
-        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+        headers: { Authorization: `Bearer ${token}` },
       },
     );
 
