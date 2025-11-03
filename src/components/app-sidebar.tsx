@@ -14,10 +14,12 @@ import { NavMain } from "./nav-main";
 import { Container, LayoutDashboard, Settings } from "lucide-react";
 import { NavUser } from "./nav-user";
 
+const userData = JSON.parse(localStorage.getItem("user")!);
+
 const data = {
   user: {
-    name: "Oluwasegun Ige",
-    email: "mailshegze@gmail.com",
+    name: userData.name,
+    email: userData.email,
   },
   navMain: [
     {
