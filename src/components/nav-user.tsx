@@ -1,9 +1,9 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import {
   DropdownMenu,
   DropdownMenuContent,
-  DropdownMenuGroup,
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuSeparator,
@@ -21,6 +21,13 @@ export function NavUser({
   }
 }) {
   const { isMobile } = useSidebar();
+  const router = useRouter();
+
+  const handleLogout = async () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+    router.push('/login');
+  }
 
   return (
     <SidebarMenu>
@@ -53,7 +60,10 @@ export function NavUser({
               </div>
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>
+            <DropdownMenuItem
+              onClick={handleLogout}
+              className="text-red-500 focus:text-red-500"
+            >
               <LogOut />
               Log out
             </DropdownMenuItem>
