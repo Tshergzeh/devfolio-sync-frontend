@@ -138,7 +138,7 @@ export default function ProjectDetailPage() {
 
   if (loading) {
     return (
-      <div className="space-y-4">
+      <div className="space-y-4 p-6 md:p-8">
         <Skeleton className="h-8 w-1/3" />
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           <Skeleton className="w-full h-[500px]" />
@@ -149,7 +149,7 @@ export default function ProjectDetailPage() {
   }
 
   return (
-    <main className="space-y-6">
+    <main className="flex flex-col gap-6 p-6 md:p-8">
       <h1 className="text-2xl font-semibold">{project?.name}</h1>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
