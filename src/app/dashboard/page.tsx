@@ -1,22 +1,43 @@
+"use client";
+
+import { useEffect, useState } from "react";
 import { columns, Project } from "@/components/columns";
 import { DataTable } from "@/components/data-table";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { useRequireAuth } from "@/hooks/use-require-auth";
 
-async function getProjects(page = 1, limit = 10): Promise<{ projects: Project[]; sevenDaysAgo: Date }> {
-  const res = await fetch(
-    `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/projects?page=${page}&limit=${limit}`, 
-    { cache: "no-store",}
-  );
+export default function DashboardPage() {
+  useRequireAuth();
 
-  if (!res.ok) throw new Error("Failed to fetch projects");
+  const [projects, setProjects] = useState<Project[]>([]);
+  const [loading, setLoading] = useState(true);
 
-  const projectsResponse = await res.json();
+  useEffect(() => {
+    async function fetchProjects() {
+      try {
+        const res = await fetch(
+          `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/projects/page=1&limit=10`,
+          {
+            headers: { Authorization: `Bearer ${localStorage.getItem("token")}` }
+          },
+        );
+        if (!res.ok) throw new Error("Failed to fetch projects");
+
+        const data = await res.json();
+        setProjects(data.data);
+      } catch (error) {
+        console.error(error);
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    fetchProjects();
+  }, []);
+
   const sevenDaysAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
-  return { projects: projectsResponse.data, sevenDaysAgo };
-}
 
-export default async function DashboardPage() {
-  const { projects, sevenDaysAgo } = await getProjects();
+  if (loading) return <p className="p-6">Loading dashboard...</p>
 
   return (
     <div className="flex flex-col gap-6 p-6">
