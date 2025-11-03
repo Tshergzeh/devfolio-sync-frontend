@@ -34,9 +34,8 @@ export const columns: ColumnDef<Project>[] = [
       return (
         <div className="flex items-center gap-2">
           <Link
-            className="font-medium hover:underline"
-            target="_blank"
-            href={project.repoUrl}
+            className="font-medium hover:underline text-primary"
+            href={`/dashboard/projects/${project._id}`}
           >
             {project.name}
           </Link>

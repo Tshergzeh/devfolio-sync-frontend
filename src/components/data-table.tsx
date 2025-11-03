@@ -1,6 +1,7 @@
 "use client";
 
 import * as React from "react";
+import { useRouter } from "next/navigation";
 import {
     flexRender,
     getCoreRowModel,
@@ -18,7 +19,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
-interface DataTableProps<TData, TValue> {
+interface DataTableProps<TData extends { _id: string }, TValue> {
   columns: ColumnDef<TData, TValue>[];
   fetchData: (page: number) => Promise<{
     data: TData[];
@@ -31,7 +32,9 @@ interface DataTableProps<TData, TValue> {
   }>;
 }
 
-export function DataTable<TData, TValue>({ columns, fetchData }: DataTableProps<TData, TValue>) {
+export function DataTable<TData extends { _id: string }, TValue>({ columns, fetchData }: DataTableProps<TData, TValue>) {
+  const router = useRouter();
+
   const [data, setData] = React.useState<TData[]>([]);
   const [page, setPage] = React.useState(1);
   const [totalPages, setTotalPages] = React.useState(1);
@@ -89,15 +92,25 @@ export function DataTable<TData, TValue>({ columns, fetchData }: DataTableProps<
           </TableHeader>
           <TableBody className="**:data-[slot=table-cell]:first:w-8">
             {table.getRowModel().rows?.length ? (
-              table.getRowModel().rows.map((row) => (
-                <TableRow key={row.id}>
-                  {row.getVisibleCells().map((cell) => (
-                    <TableCell key={cell.id}>
-                      {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                    </TableCell>
-                  ))}
-                </TableRow>
-              ))
+              table.getRowModel().rows.map((row) => {
+                const project = row.original;
+                return (
+                  <TableRow
+                    key={row.id}
+                    className="cursor-pointer hover:bg-muted/50 transition-colors"
+                    onClick={(e) => {
+                      const target = e.target as HTMLElement;
+                      if (target.closest("button, a")) return;
+                      router.push(`/dashboard/projects/${project._id}`)
+                    }}
+                  >
+                    {row.getVisibleCells().map((cell) => (
+                      <TableCell key={cell.id}>
+                        {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                      </TableCell>
+                    ))}
+                  </TableRow>
+              )})
             ) : (
                 <TableRow>
                   <TableCell colSpan={columns.length} className="h-24 text-center">
