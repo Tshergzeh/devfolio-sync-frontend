@@ -72,7 +72,7 @@ export const columns: ColumnDef<Project>[] = [
     accessorKey: "summary",
     header: "Summary",
     cell: ({ row }) => (
-      <div className="max-w-xs whitespace-normal wrap-break-word text-sm text-muted-foreground">
+      <div className="max-w-xs whitespace-normal wrap-break-word text-sm text-muted-foreground line-clamp-2">
         {row.getValue("summary")}
       </div>
     ),
