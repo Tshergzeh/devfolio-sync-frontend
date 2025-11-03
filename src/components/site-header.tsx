@@ -1,14 +1,14 @@
 "use client";
 
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
 import { Separator } from "./ui/separator";
 import { SidebarTrigger } from "./ui/sidebar";
 import Link from "next/link";
+import { useBreadcrumbTitle } from "@/hooks/use-breadcrumbs-title";
 
 export function SiteHeader() {
   const pathName = usePathname();
-  const router = useRouter();
-
+  const title = useBreadcrumbTitle();
   const segments = pathName.split("/").filter(Boolean);
 
   const formatSegment = (segment: string) => {
@@ -35,17 +35,16 @@ export function SiteHeader() {
                 {segments.slice(1).map((segment, idx) => {
                   const href = "/" + segments.slice(0, idx + 2).join("/");
                   const isLast = idx === segments.slice(1).length - 1;
+                  const label = isLast && title ? title : formatSegment(segment);
 
                   return (
                     <div className="flex items-center gap-1" key={href}>
                       <span>/</span>
                       {isLast ? (
-                        <span className="text-foregound font-medium">
-                          {formatSegment(segment)}
-                        </span>
+                        <span className="text-foregound font-medium">{label}</span>
                       ) : (
                         <Link className="hover:text-foreground transition-colours" href={href}>
-                          {formatSegment(segment)}
+                          {label}
                         </Link>
                       )}
                     </div>
