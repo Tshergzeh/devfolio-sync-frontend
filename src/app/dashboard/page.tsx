@@ -85,7 +85,6 @@ export default function DashboardPage() {
         <DataTable
          columns={columns}
          fetchData={async (page: number) => {
-          console.log(page);
           const res = await fetch(
             `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/projects?page=${page}&limit=10`,
             {

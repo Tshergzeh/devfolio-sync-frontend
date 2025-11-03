@@ -11,7 +11,8 @@ import {
   SidebarFooter,
 } from "./ui/sidebar";
 import { NavMain } from "./nav-main";
-import { Container, LayoutDashboard, Settings } from "lucide-react";
+import { NavUsersLinks } from "./nav-users-links";
+import { Container, LayoutDashboard, Settings, UserPlus, Users } from "lucide-react";
 import { NavUser } from "./nav-user";
 
 const userData = JSON.parse(localStorage.getItem("user")!);
@@ -24,15 +25,20 @@ const data = {
   navMain: [
     {
       title: "Dashboard",
-      url: "/",
+      url: "/dashboard",
       icon: LayoutDashboard,
     },
   ],
-  navSecondary: [
+  navUsersLinks: [
     {
-      title: "Settings",
-      url: "#",
-      icon: Settings,
+      title: "All Users",
+      url: "/dashboard/users",
+      icon: Users,
+    },
+    {
+      title: "Add User",
+      url: "/dashboard/users/add",
+      icon: UserPlus,
     },
   ]
 }
@@ -57,6 +63,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       </SidebarHeader>
       <SidebarContent>
         <NavMain items={data.navMain} />
+        <NavUsersLinks items={data.navUsersLinks} />
       </SidebarContent>
       <SidebarFooter>
         <NavUser user={data.user} />
