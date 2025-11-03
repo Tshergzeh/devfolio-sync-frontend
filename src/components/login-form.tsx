@@ -65,7 +65,7 @@ export function LoginForm({
       localStorage.setItem("token", data.token);
       localStorage.setItem("user", JSON.stringify(data.user));
 
-      router.push("/projects");
+      router.push("/dashboard");
     } catch (error: unknown) {
       let message = "Something went wrong";
       if (error instanceof Error) {
