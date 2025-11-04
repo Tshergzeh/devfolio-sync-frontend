@@ -11,7 +11,6 @@ import {
   FieldLabel,
   FieldSet
 } from "@/components/ui/field";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { toast } from "sonner";
 import { useRequireAuth } from "@/hooks/use-require-auth";
 
