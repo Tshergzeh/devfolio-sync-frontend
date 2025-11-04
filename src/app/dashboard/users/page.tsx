@@ -4,7 +4,10 @@ import { DataTable } from "@/components/data-table";
 import { ColumnDef } from "@tanstack/react-table";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 import { useRequireAuth } from "@/hooks/use-require-auth";
+import { toast } from "sonner";
+import { useState } from "react";
 
 type User = {
   _id: string;
@@ -20,6 +23,30 @@ export default function UsersPage() {
   useRequireAuth();
 
   const token = localStorage.getItem("token");
+  const [refreshKey, setRefreshKey] = useState(0);
+
+  async function handleDeleteUser(id: string) {
+    if (!confirm("Are you sure you want to delete this user?")) return;
+
+    try {
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/auth/${id}`,
+        {
+          method: "DELETE",
+          headers: { Authorization: `Bearer ${token}` },
+        },
+      );
+
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.message || "Failed to delete user");
+
+      toast.success("User deleted successfully");
+      setRefreshKey((prev) => prev + 1);
+    } catch (error) {
+      const message = error instanceof Error ? error.message : String(error);
+      toast.error(message || "Something went wrong");
+    }
+  }
   
   const columns: ColumnDef<User>[] = [
     {
@@ -42,6 +69,22 @@ export default function UsersPage() {
           : "bg-green-100 text-green-800";
         return <Badge className={`${color} font-medium`}>{role}</Badge>;
       },
+    },
+    {
+      id: "actions",
+      header: "Actions",
+      cell: ({ row }) => (
+        <Button
+          variant="destructive"
+          size="sm"
+          onClick={(e) => {
+            e.stopPropagation();
+            handleDeleteUser(row.original._id);
+          }}
+        >
+          Delete
+        </Button>
+      ),
     },
   ];
 
@@ -69,7 +112,11 @@ export default function UsersPage() {
           <CardTitle>All Users</CardTitle>
         </CardHeader>
         <CardContent>
-          <DataTable columns={columns} fetchData={fetchUsers} />
+          <DataTable
+            columns={columns}
+            fetchData={fetchUsers}
+            key={refreshKey}
+          />
         </CardContent>
       </Card>
     </div>

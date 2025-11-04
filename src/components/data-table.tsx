@@ -1,7 +1,6 @@
 "use client";
 
 import * as React from "react";
-import { useRouter } from "next/navigation";
 import {
     flexRender,
     getCoreRowModel,
@@ -30,11 +29,14 @@ interface DataTableProps<TData extends { _id: string }, TValue> {
       hasNextPage: boolean;
     }
   }>;
+  onRowClick?: (row: TData) => void;
 }
 
-export function DataTable<TData extends { _id: string }, TValue>({ columns, fetchData }: DataTableProps<TData, TValue>) {
-  const router = useRouter();
-
+export function DataTable<TData extends { _id: string }, TValue>({
+  columns,
+  fetchData,
+  onRowClick,
+}: DataTableProps<TData, TValue>) {
   const [data, setData] = React.useState<TData[]>([]);
   const [page, setPage] = React.useState(1);
   const [totalPages, setTotalPages] = React.useState(1);
@@ -93,15 +95,15 @@ export function DataTable<TData extends { _id: string }, TValue>({ columns, fetc
           <TableBody className="**:data-[slot=table-cell]:first:w-8">
             {table.getRowModel().rows?.length ? (
               table.getRowModel().rows.map((row) => {
-                const project = row.original;
+                const record = row.original;
                 return (
                   <TableRow
                     key={row.id}
-                    className="cursor-pointer hover:bg-muted/50 transition-colors"
-                    onClick={(e) => {
-                      const target = e.target as HTMLElement;
-                      if (target.closest("button, a")) return;
-                      router.push(`/dashboard/projects/${project._id}`)
+                    className={`transition-colors ${
+                      onRowClick ? "cursor-pointer hover:bg-muted/50" : ""
+                    }`}
+                    onClick={() => {
+                      if (onRowClick) onRowClick(record);
                     }}
                   >
                     {row.getVisibleCells().map((cell) => (
@@ -114,7 +116,7 @@ export function DataTable<TData extends { _id: string }, TValue>({ columns, fetc
             ) : (
                 <TableRow>
                   <TableCell colSpan={columns.length} className="h-24 text-center">
-                    No projects found.
+                    No records found.
                   </TableCell>
                 </TableRow>
             )}
