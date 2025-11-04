@@ -10,7 +10,7 @@ import {
   DropdownMenuTrigger,
 } from "./ui/dropdown-menu";
 import { SidebarMenu, SidebarMenuButton, SidebarMenuItem, useSidebar } from "./ui/sidebar";
-import { EllipsisVertical, LogOut } from "lucide-react";
+import { EllipsisVertical, LogOut, Replace } from "lucide-react";
 
 export function NavUser({
   user
@@ -27,6 +27,10 @@ export function NavUser({
     localStorage.removeItem("token");
     localStorage.removeItem("user");
     router.push('/login');
+  }
+
+  const handleChangePassword = async () => {
+    router.push('/dashboard/users/change-password');
   }
 
   return (
@@ -61,8 +65,15 @@ export function NavUser({
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
             <DropdownMenuItem
+              onClick={handleChangePassword}
+              className="cursor-pointer"
+            >
+              <Replace />
+              Change Password
+            </DropdownMenuItem>
+            <DropdownMenuItem
               onClick={handleLogout}
-              className="text-red-500 focus:text-red-500"
+              className="text-red-500 cursor-pointer focus:text-red-500"
             >
               <LogOut />
               Log out
