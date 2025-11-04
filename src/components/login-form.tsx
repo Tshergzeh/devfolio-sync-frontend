@@ -65,7 +65,11 @@ export function LoginForm({
       localStorage.setItem("token", data.token);
       localStorage.setItem("user", JSON.stringify(data.user));
 
-      router.push("/dashboard");
+      if (data.user.isFirstLogin) {
+        router.push("/dashboard/users/change-default-password");
+      } else {
+        router.push("/dashboard");
+      }
     } catch (error: unknown) {
       let message = "Something went wrong";
       if (error instanceof Error) {
