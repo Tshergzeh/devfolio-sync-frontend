@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import { columns, Project } from "@/components/columns";
 import { DataTable } from "@/components/data-table";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -10,6 +11,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 export default function DashboardPage() {
   useRequireAuth();
 
+  const router = useRouter();
   const [projects, setProjects] = useState<Project[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -95,6 +97,7 @@ export default function DashboardPage() {
           if (!res.ok) throw new Error("Failed to fetch projects");
           return await res.json();
          }}
+         onRowClick={(row) => router.push(`/dashboard/projects/${row._id}`)}
         />
       </div>
     </div>
