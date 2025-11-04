@@ -12,10 +12,11 @@ import {
 } from "./ui/sidebar";
 import { NavMain } from "./nav-main";
 import { NavUsersLinks } from "./nav-users-links";
-import { Container, LayoutDashboard, Settings, UserPlus, Users } from "lucide-react";
+import { Container, LayoutDashboard, UserPlus, Users } from "lucide-react";
 import { NavUser } from "./nav-user";
 
-const userData = JSON.parse(localStorage.getItem("user")!);
+const user = localStorage.getItem("user")!;
+const userData = JSON.parse(user);
 
 const data = {
   user: {
