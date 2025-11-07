@@ -1,6 +1,6 @@
 "use client";
 
-import { ChangeEvent, FormEvent, useState } from "react";
+import { ChangeEvent, FormEvent, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -19,6 +19,7 @@ export default function AddUserPage() {
     useRequireAuth();
     const router = useRouter();
 
+    const [token, setToken] = useState<string | null>(null);
     const [loading, setLoading] = useState(false);
     const [form, setForm] = useState({
       name: "",
@@ -26,6 +27,11 @@ export default function AddUserPage() {
       password: "",
       role: "editor",
     });
+    
+    useEffect(() => {
+      const storedToken = localStorage.getItem("token");
+      setToken(storedToken);
+    }, []);
 
     const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLSelectElement>) =>
       setForm({ ...form, [e.target.name]: e.target.value });
@@ -38,7 +44,6 @@ export default function AddUserPage() {
       setLoading(true);
 
       try {
-        const token = localStorage.getItem("token");
         const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/auth/register`, {
           method: "POST",
           headers: {

@@ -70,7 +70,8 @@ export function DataTable<TData extends { _id: string }, TValue>({
 
   React.useEffect(() => {
     loadPage(page);
-  }, [loadPage, page]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [page]);
 
   return (
     <div className="space-y-4">
@@ -135,7 +136,7 @@ export function DataTable<TData extends { _id: string }, TValue>({
             variant="outline"
             size="sm"
             onClick={() => loadPage(page - 1)}
-            disabled={page <= 1}
+            disabled={page <= 1 || loading}
           >
             <ChevronLeft className="h-4 w-4 mr-1" />
             Previous
@@ -145,7 +146,7 @@ export function DataTable<TData extends { _id: string }, TValue>({
             variant="outline"
             size="sm"
             onClick={() => loadPage(page + 1)}
-            disabled={page >= totalPages}
+            disabled={page >= totalPages || loading}
           >
             Next
             <ChevronRight className="h-4 w-4 ml-1" />

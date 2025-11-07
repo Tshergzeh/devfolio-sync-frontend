@@ -10,18 +10,27 @@ import { Skeleton } from "@/components/ui/skeleton";
 
 export default function DashboardPage() {
   useRequireAuth();
-
   const router = useRouter();
+  const [token, setToken] = useState<string | null>(null);
   const [projects, setProjects] = useState<Project[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    if (typeof window !== "undefined") {
+      const storedToken = localStorage.getItem("token");
+      setToken(storedToken); 
+    }
+  }, []);
+
+  useEffect(() => {
+    if (!token) return; 
+
     async function fetchProjects() {
       try {
         const res = await fetch(
           `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/projects?page=1&limit=1`,
           {
-            headers: { Authorization: `Bearer ${localStorage.getItem("token")}` }
+            headers: { Authorization: `Bearer ${token}` }
           },
         );
         if (!res.ok) throw new Error("Failed to fetch projects");
@@ -36,7 +45,7 @@ export default function DashboardPage() {
     }
 
     fetchProjects();
-  }, []);
+  }, [token]);
 
   const sevenDaysAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
 
@@ -84,21 +93,23 @@ export default function DashboardPage() {
 
       <div className="flex flex-col gap-4">
         <h2 className="text-xl font-semibold">Projects</h2>
-        <DataTable
-         columns={columns}
-         fetchData={async (page: number) => {
-          const res = await fetch(
-            `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/projects?page=${page}&limit=10`,
-            {
-              headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
-              cache: "no-store",
-            }
-          );
-          if (!res.ok) throw new Error("Failed to fetch projects");
-          return await res.json();
-         }}
-         onRowClick={(row) => router.push(`/dashboard/projects/${row._id}`)}
-        />
+        {token && (
+          <DataTable
+          columns={columns}
+          fetchData={async (page: number) => {
+            const res = await fetch(
+              `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/projects?page=${page}&limit=10`,
+              {
+                headers: { Authorization: `Bearer ${token}` },
+                cache: "no-store",
+              }
+            );
+            if (!res.ok) throw new Error("Failed to fetch projects");
+            return await res.json();
+          }}
+          onRowClick={(row) => router.push(`/dashboard/projects/${row._id}`)}
+          />
+        )}
       </div>
     </div>
   );
