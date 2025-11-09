@@ -15,36 +15,48 @@ import { NavUsersLinks } from "./nav-users-links";
 import { Container, LayoutDashboard, UserPlus, Users } from "lucide-react";
 import { NavUser } from "./nav-user";
 
-const user = localStorage.getItem("user")!;
-const userData = JSON.parse(user);
-
-const data = {
-  user: {
-    name: userData.name,
-    email: userData.email,
-  },
-  navMain: [
-    {
-      title: "Dashboard",
-      url: "/dashboard",
-      icon: LayoutDashboard,
-    },
-  ],
-  navUsersLinks: [
-    {
-      title: "All Users",
-      url: "/dashboard/users",
-      icon: Users,
-    },
-    {
-      title: "Add User",
-      url: "/dashboard/users/add",
-      icon: UserPlus,
-    },
-  ]
-}
-
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+  const [user, setUser] = React.useState<{
+    name: string;
+    email: string;
+  } | null>(null);
+
+  React.useEffect(() => {
+    if (typeof window === "undefined") return;
+
+    const storedUser = localStorage.getItem("user");
+    if (storedUser) {
+      try {
+        const parsed = JSON.parse(storedUser);
+        setUser({ name: parsed.name, email: parsed.email });
+      } catch (error) {
+        console.error("Invalid user data in localStorage:", error);
+      }
+    }
+  }, []);
+
+  const data = {
+    navMain: [
+      {
+        title: "Dashboard",
+        url: "/dashboard",
+        icon: LayoutDashboard,
+      },
+    ],
+    navUsersLinks: [
+      {
+        title: "All Users",
+        url: "/dashboard/users",
+        icon: Users,
+      },
+      {
+        title: "Add User",
+        url: "/dashboard/users/add",
+        icon: UserPlus,
+      },
+    ]
+  }
+
   return (
     <Sidebar collapsible="offcanvas" {...props}>
       <SidebarHeader>
@@ -67,7 +79,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         <NavUsersLinks items={data.navUsersLinks} />
       </SidebarContent>
       <SidebarFooter>
-        <NavUser user={data.user} />
+        {user && <NavUser user={user} />}
       </SidebarFooter>
     </Sidebar>
   );
